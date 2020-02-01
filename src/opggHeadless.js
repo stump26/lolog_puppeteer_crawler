@@ -1,6 +1,6 @@
 const puppeteer = require("puppeteer");
 
-const opggHeadless = async (champion = "LeeSin") => {
+const opggHeadless = async champion => {
   const getDOMElementSize = selector => {
     const element = document.querySelector(selector);
     if (!element) return null;
@@ -10,21 +10,28 @@ const opggHeadless = async (champion = "LeeSin") => {
 
   const padding = "10";
   const runeQuerySelector =
-    "#scroll-view-main > div > div.withNav__Wrapper-sc-1gdc90q-1.fQLInq > div > div > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp > div:nth-child(3) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.hxNeHv > div.Column-sc-1cxsa6a-0.ixlThO > div:nth-child(1) > div.Inner-sc-7vmxjm-0.htsreA > div:nth-child(1) > div.View-sc-1c57lgy-1.sc-jTqLGJ.iIRNkD.View__StyledDiv-sc-1c57lgy-0.eidRwp > div";
+    "#scroll-view-main div.View-sc-1c57lgy-1.sc-jTqLGJ.iIRNkD.View__StyledDiv-sc-1c57lgy-0.eidRwp > div";
   const itemAndSpellQuerySelector =
-    "#scroll-view-main > div > div.withNav__Wrapper-sc-1gdc90q-1.fQLInq > div > div > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp > div:nth-child(3) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.hxNeHv > div.Column-sc-1cxsa6a-0.ixlThO > div:nth-child(1) > div.Inner-sc-7vmxjm-0.htsreA > div:nth-child(1) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp";
+    "#scroll-view-main div.Inner-sc-7vmxjm-0.htsreA > div > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp";
   const browser = await puppeteer.launch({
-    headless: false,
-    args: ["--headless", "--disable-dev-shm-usage", "--no-sandbox"]
+    headless: false
+    // args: ["--headless", "--disable-dev-shm-usage", "--no-sandbox"]
   });
   const page = await browser.newPage();
 
+  process.on("unhandledRejection", (reason, p) => {
+    console.error("Unhandled Rejection at: Promise", p, "reason:", reason);
+    browser.close();
+  });
   const defaultViewport = {
     height: 1920,
     width: 1280
   };
 
-  await page.goto(`https://blitz.gg/lol/champions/${champion}`);
+  await page.goto(`https://blitz.gg/lol/champions/${champion}`, {
+    waitUntil: "load",
+    timeout: 0
+  });
 
   // Resize view-port for suitable content.
   const bodyHandle = await page.$("body");
@@ -54,7 +61,7 @@ const opggHeadless = async (champion = "LeeSin") => {
       },
       type: "jpeg",
       quality: 80,
-      encoding: "base64"
+      encoding: "binary"
     });
   }
 

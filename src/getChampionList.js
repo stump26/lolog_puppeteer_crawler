@@ -13,8 +13,7 @@ const getChampionList = async () => {
   const {
     data: { data }
   } = await axios(axiosConfig);
-  console.log("TCL: getChampionList -> Object.keys(data", Object.keys(data));
-  return data;
+  return Object.keys(data);
 };
 
-getChampionList();
+module.exports = getChampionList;
