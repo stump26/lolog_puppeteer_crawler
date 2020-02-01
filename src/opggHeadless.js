@@ -14,25 +14,32 @@ const opggHeadless = async champion => {
   const itemAndSpellQuerySelector =
     "#scroll-view-main div.Inner-sc-7vmxjm-0.htsreA > div > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp";
   const browser = await puppeteer.launch({
-    headless: false
-    // args: ["--headless", "--disable-dev-shm-usage", "--no-sandbox"]
+    headless: false,
+    args: [
+      "--headless",
+      "--disable-dev-shm-usage",
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3803.0 Safari/537.36",
+      "--lang=ko,en-US;q=0.9,en;q=0.8,ko-KR;q=0.7,la;q=0.6"
+    ]
   });
   const page = await browser.newPage();
-
-  process.on("unhandledRejection", (reason, p) => {
+  process.on("unhandledRejection", async (reason, p) => {
     console.error("Unhandled Rejection at: Promise", p, "reason:", reason);
-    browser.close();
+    await browser.close();
   });
+
   const defaultViewport = {
-    height: 1920,
-    width: 1280
+    width: 1380,
+    height: 1920
   };
 
+  await page.setViewport(defaultViewport);
   await page.goto(`https://blitz.gg/lol/champions/${champion}`, {
-    waitUntil: "load",
+    waitUntil: "networkidle0",
     timeout: 0
   });
-
   // Resize view-port for suitable content.
   const bodyHandle = await page.$("body");
   const boundingBox = await bodyHandle.boundingBox();
