@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const opggHeadless = require("./opggHeadless");
 const getChampionList = require("./getChampionList");
 const { MONGO_URL, DATABASE_NAME } = require("./config");
-const ChampionHintModel = require("./mongo/ChampionHintModel");
+const ChampionHintImgModel = require("./mongo/ChampionHintImgModel");
 
 console.log(
   "TCL: (`${MONGO_URL}/${DATABASE_NAME}`",
@@ -20,7 +20,7 @@ const crawChampion = async () => {
   const traverseAll = async cham => {
     console.log("TCL: traverseAll -> cham", cham);
     const result = await opggHeadless(cham);
-    const newChamDoc = new ChampionHintModel({
+    const newChamDoc = new ChampionHintImgModel({
       name: cham,
       runeHint: result.runeHint,
       itemAndSpellHint: result.itemAndSpellHint
