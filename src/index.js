@@ -8,6 +8,7 @@ const ChampionHintImgModel = require('./mongo/ChampionHintImgModel');
 console.log('TCL: (`${MONGO_URL}/${DATABASE_NAME}`', `mongodb://${MONGO_URL}/${DATABASE_NAME}`);
 mongoose.connect(`mongodb://${MONGO_URL}/${DATABASE_NAME}`, {
   useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 mongoose.connection.once('open', () => {
   console.log('✅MongoDB Connected');
@@ -45,10 +46,6 @@ const crawChampion = async () => {
         throw updateError;
       }
     });
-    const DB_result = await newChamDoc.save();
-    console.log('TCL: crawChampion -> DB_result', DB_result);
-
-    return DB_result;
   };
 
   const chamList = await getChampionList();
