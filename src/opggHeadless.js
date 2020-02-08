@@ -10,9 +10,9 @@ const opggHeadless = async champion => {
 
   const padding = '10';
   const runeQuerySelector =
-    '#scroll-view-main div.View-sc-1c57lgy-1.sc-cxZfpC.ixlBxq.View__StyledDiv-sc-1c57lgy-0.eidRwp > div';
+    '#scroll-view-main > div:nth-child(1) >div:nth-child(1) >div:nth-child(1) >div:nth-child(1)>div:nth-child(2)>div:nth-child(3)>div:nth-child(2)>div:nth-child(1)>div:nth-child(1)>div:nth-child(3)>div:nth-child(1)>div:nth-child(2)>div';
   const itemAndSpellQuerySelector =
-    '#scroll-view-main div.Inner-sc-7vmxjm-0.htsreA > div > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp';
+    '#scroll-view-main > div:nth-child(1) >div:nth-child(1) >div:nth-child(1) >div:nth-child(1)>div:nth-child(2)>div:nth-child(3)>div:nth-child(2)>div:nth-child(1)>div:nth-child(1)>div:nth-child(3)>div:nth-child(1)>div:nth-child(1)';
   const browser = await puppeteer.launch({
     headless: false,
     args: [
@@ -26,28 +26,29 @@ const opggHeadless = async champion => {
   });
   const page = await browser.newPage();
   process.on('unhandledRejection', async (reason, p) => {
+    debugger;
     console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
     await browser.close();
   });
 
   const defaultViewport = {
-    width: 1380,
+    width: 1450,
     height: 1920,
   };
 
   await page.setViewport(defaultViewport);
   await page.goto(`https://blitz.gg/lol/champions/${champion}`, {
-    waitUntil: 'networkidle0',
+    waitUntil: 'networkidle2',
     timeout: 0,
   });
   // Resize view-port for suitable content.
-  const bodyHandle = await page.$('body');
-  const boundingBox = await bodyHandle.boundingBox();
-  const newViewport = {
-    width: Math.max(defaultViewport.width, Math.ceil(boundingBox.width)),
-    height: Math.max(defaultViewport.height, Math.ceil(boundingBox.height)),
-  };
-  await page.setViewport(Object.assign({}, defaultViewport, newViewport));
+  // const bodyHandle = await page.$('body');
+  // const boundingBox = await bodyHandle.boundingBox();
+  // const newViewport = {
+  //   width: Math.max(defaultViewport.width, Math.ceil(boundingBox.width)),
+  //   height: Math.max(defaultViewport.height, Math.ceil(boundingBox.height)),
+  // };
+  // await page.setViewport(Object.assign({}, defaultViewport, newViewport));
 
   async function screenshotDOMElement(opts) {
     const rect = await page.evaluate(getDOMElementSize, opts.selector);
@@ -85,6 +86,7 @@ const opggHeadless = async champion => {
     );
 
     return Promise.all(promises).then(([img1, img2]) => {
+      debugger;
       browser.close();
       return {
         runeHint: img1,
