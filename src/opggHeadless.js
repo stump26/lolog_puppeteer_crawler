@@ -10,9 +10,9 @@ const opggHeadless = async champion => {
 
   const padding = '10';
   const runeQuerySelector =
-    '#scroll-view-main > div:nth-child(1) >div:nth-child(1) >div:nth-child(1) >div:nth-child(1)>div:nth-child(2)>div:nth-child(3)>div:nth-child(2)>div:nth-child(1)>div:nth-child(1)>div:nth-child(3)>div:nth-child(1)>div:nth-child(2)>div';
+    '#scroll-view-main > div > div.withNav__Wrapper-sc-1gdc90q-1.fQLInq > div > div:nth-child(1) > div:nth-child(3) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.hxNeHv > div.Column-sc-1cxsa6a-0.ixlThO > div:nth-child(1) > div.Inner-sc-7vmxjm-0.htsreA > div:nth-child(1) > div.View-sc-1c57lgy-1.sc-klSiHT.cJNGyB.View__StyledDiv-sc-1c57lgy-0.eidRwp';
   const itemAndSpellQuerySelector =
-    '#scroll-view-main > div:nth-child(1) >div:nth-child(1) >div:nth-child(1) >div:nth-child(1)>div:nth-child(2)>div:nth-child(3)>div:nth-child(2)>div:nth-child(1)>div:nth-child(1)>div:nth-child(3)>div:nth-child(1)>div:nth-child(1)';
+    '#scroll-view-main > div > div.withNav__Wrapper-sc-1gdc90q-1.fQLInq > div > div:nth-child(1) > div:nth-child(3) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.hxNeHv > div.Column-sc-1cxsa6a-0.ixlThO > div:nth-child(1) > div.Inner-sc-7vmxjm-0.htsreA > div:nth-child(1) > div.View-sc-1c57lgy-1.cLLSJv.View__StyledDiv-sc-1c57lgy-0.eidRwp';
   const browser = await puppeteer.launch({
     headless: false,
     args: [
@@ -26,7 +26,6 @@ const opggHeadless = async champion => {
   });
   const page = await browser.newPage();
   process.on('unhandledRejection', async (reason, p) => {
-    debugger;
     console.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
     await browser.close();
   });
@@ -86,7 +85,6 @@ const opggHeadless = async champion => {
     );
 
     return Promise.all(promises).then(([img1, img2]) => {
-      debugger;
       browser.close();
       return {
         runeHint: img1,
